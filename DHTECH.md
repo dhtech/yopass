@@ -10,19 +10,28 @@ upstream untouched.
 Only the look, and only in the web page:
 
 - `website/src/shared/styles/dhtech.css`: the two default themes
-  (`emerald`, `dim`) repainted in our orange on near-black. The theme
-  names are upstream's, so no server, flag or test knows about it.
+  (`emerald`, `dim`) repainted in DreamHack's orange (#FF7801) on
+  black; behind the card the tile grid of DreamHack's classic logo - a
+  floor of orange tiles that flows up into a point
+  (`website/public/dhtech-warp.svg`, drawn by
+  `website/scripts/dhtech-warp.mjs`); notices are panels with a line
+  of their colour instead of solid blocks, and a warning is amber. The
+  theme names are upstream's, so no server, flag or test knows about
+  it.
 - `website/public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`:
   our mark.
 - `website/src/shared/components/Navbar.tsx`: our mark and name where
   upstream shows its wordmark, when no branding is configured.
 - `website/index.html`: the page's title.
+- `website/src/app/App.tsx`, `SettingsMenu.tsx`: the credit to Yopass
+  ("(c) 2014-<year> Yopass", with its link) is in the settings menu
+  instead of the footer; the footer is only there when a privacy
+  notice or an imprint is configured.
 
 The server is upstream's, byte for byte. Its licence check is not
 touched: the options upstream sells with a licence (branding by flag,
 OIDC, audit log, larger files, read receipts, webhooks, secret
-requests) stay locked here exactly as upstream ships them. The footer
-keeps its link to Yopass.
+requests) stay locked here exactly as upstream ships them.
 
 ## Releases
 

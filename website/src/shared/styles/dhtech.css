@@ -24,27 +24,79 @@
   /* a deeper orange: it is also the colour of links on white (5.2:1) */
   --color-primary: #c2410c;
   --color-primary-content: #ffffff;
-  --color-secondary: #ff6600;
+  --color-secondary: #ff7801;
   --color-secondary-content: #141414;
-  --color-accent: #ff8533;
+  --color-accent: #ffe300;
   --color-accent-content: #141414;
   --color-neutral: #26262b;
   --color-neutral-content: #f3f4f6;
+  /* a warning is ours too: amber, not the base theme's yellow */
+  --color-warning: #b45309;
+  --color-warning-content: #ffffff;
+  --dhtech-warp: 0.5;
 }
 
 /* dark */
 :root[data-theme='dim'] {
   color-scheme: dark;
   --color-base-100: #1b1b1f;
-  --color-base-200: #141416;
+  /* the page itself: black, as the warp's own ground */
+  --color-base-200: #0c0c0d;
   --color-base-300: #2c2c31;
   --color-base-content: #e6e7ea;
-  --color-primary: #ff6600;
+  /* DreamHack's own orange (dreamhack.com/brand: #FF7801, Pantone 021C) */
+  --color-primary: #ff7801;
   --color-primary-content: #141414;
-  --color-secondary: #ff8533;
+  --color-secondary: #ff9433;
   --color-secondary-content: #141414;
-  --color-accent: #ffa366;
+  --color-accent: #ffe300;
   --color-accent-content: #141414;
   --color-neutral: #26262b;
   --color-neutral-content: #f3f4f6;
+  --color-warning: #ff9433;
+  --color-warning-content: #141414;
+  --dhtech-warp: 0.9;
+}
+
+/*
+ * The page behind the card: the tile grid of DreamHack's classic logo -
+ * a floor of orange tiles that flows up into a point
+ * (public/dhtech-warp.svg, drawn by scripts/dhtech-warp.mjs). It lies
+ * between the page's own colour and
+ * its content, and stays put when the page scrolls. The element is the
+ * app's outermost one (App.tsx: "min-h-screen bg-base-200 ...").
+ */
+#root > .min-h-screen {
+  isolation: isolate;
+}
+
+#root > .min-h-screen::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url('/dhtech-warp.svg') center / cover no-repeat;
+  opacity: var(--dhtech-warp);
+}
+
+/*
+ * Notices ("Important", errors, hints): a panel in the page's own tone
+ * with a line of the notice's colour around it - not a block of yellow,
+ * red or blue. DaisyUI keeps that colour in --alert-border-color.
+ */
+:root .alert-warning,
+:root .alert-error,
+:root .alert-info {
+  color: var(--color-base-content);
+  background-color: color-mix(
+    in oklab,
+    var(--alert-border-color) 12%,
+    var(--color-base-100)
+  );
+  border-color: color-mix(
+    in oklab,
+    var(--alert-border-color) 60%,
+    var(--color-base-100)
+  );
 }

@@ -20,13 +20,12 @@ test.describe('Footer Links', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // Check that footer exists but privacy/imprint links are not present
-    const footer = page.locator('footer');
-    await expect(footer).toBeVisible();
+    // dhtech: without a link to show there is no footer at all
+    await expect(page.locator('footer')).toHaveCount(0);
     await expect(
-      footer.locator('a:has-text("Privacy Notice")'),
+      page.locator('a:has-text("Privacy Notice")'),
     ).not.toBeVisible();
-    await expect(footer.locator('a:has-text("Imprint")')).not.toBeVisible();
+    await expect(page.locator('a:has-text("Imprint")')).not.toBeVisible();
   });
 
   test('should show only privacy notice link when configured', async ({
@@ -62,9 +61,9 @@ test.describe('Footer Links', () => {
     // Check that imprint link is not present
     await expect(page.locator('a:has-text("Imprint")')).not.toBeVisible();
 
-    // Check that the text contains bullet separator and created by text
+    // dhtech: the link alone - the credit is in the settings menu
     const footerText = page.locator('footer div.flex.flex-wrap');
-    await expect(footerText).toContainText('Privacy Notice•© 2014');
+    await expect(footerText).toHaveText('Privacy Notice');
   });
 
   test('should show only imprint link when configured', async ({ page }) => {
@@ -100,9 +99,9 @@ test.describe('Footer Links', () => {
       page.locator('a:has-text("Privacy Notice")'),
     ).not.toBeVisible();
 
-    // Check that the text contains bullet separator and created by text
+    // dhtech: the link alone - the credit is in the settings menu
     const footerText = page.locator('footer div.flex.flex-wrap');
-    await expect(footerText).toContainText('Imprint•© 2014');
+    await expect(footerText).toHaveText('Imprint');
   });
 
   test('should show both privacy notice and imprint links when both are configured', async ({
@@ -146,7 +145,7 @@ test.describe('Footer Links', () => {
 
     // Check that both links are on the same line with bullet separators
     const footerText = page.locator('footer div.flex.flex-wrap');
-    await expect(footerText).toContainText('Privacy Notice•Imprint•© 2014');
+    await expect(footerText).toHaveText('Privacy Notice•Imprint');
   });
 
   test('should show footer links on all pages when configured', async ({
@@ -208,7 +207,7 @@ test.describe('Footer Links', () => {
     await expect(page.locator('a:has-text("Imprint")')).not.toBeVisible();
   });
 
-  test('should show default Yopass copyright when APP_NAME is not set', async ({
+  test('dhtech: the Yopass credit is in the settings menu, not the footer', async ({
     page,
   }) => {
     await page.route('**/config', async route => {
@@ -226,13 +225,14 @@ test.describe('Footer Links', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    const footer = page.locator('footer');
+    await expect(page.locator('footer')).toHaveCount(0);
+    await page.locator('[data-testid="settings-menu-button"]').click();
+    const credit = page.locator('[data-testid="yopass-credit"]');
     const currentYear = await page.evaluate(() =>
       new Date().getFullYear().toString(),
     );
-    await expect(footer).toContainText(`© 2014–${currentYear}`);
-    await expect(footer.locator('a[href="https://yopass.se"]')).toBeVisible();
-    await expect(footer.locator('a[href="https://yopass.se"]')).toHaveText(
+    await expect(credit).toContainText(`© 2014–${currentYear}`);
+    await expect(credit.locator('a[href="https://yopass.se"]')).toHaveText(
       'Yopass',
     );
   });

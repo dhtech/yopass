@@ -208,6 +208,21 @@ export default function SettingsMenu() {
               {formatDateTime(previewTime, dateFormat)}
             </div>
           </div>
+          {/* dhtech: the credit upstream shows in the footer */}
+          <div
+            className="pt-3 border-t border-base-300 text-xs text-base-content/60 text-center"
+            data-testid="yopass-credit"
+          >
+            &copy; 2014&ndash;{new Date(previewTime * 1000).getFullYear()}{' '}
+            <a
+              href="https://yopass.se"
+              className="text-primary font-medium underline decoration-dotted underline-offset-4 hover:decoration-solid"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Yopass
+            </a>
+          </div>
         </div>
       )}
     </div>

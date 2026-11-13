@@ -177,13 +177,14 @@ export default function App() {
           />
         )}
       </HashRouter>
-      {/* Footer */}
-      <footer className="bg-base-100/50 border-t border-base-300">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col items-center text-center space-y-4">
-            <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
-              {PRIVACY_NOTICE_URL && PRIVACY_NOTICE_URL.trim() && (
-                <>
+      {/* Footer - dhtech: only when there is a link to show; the credit
+          to Yopass is in the settings menu */}
+      {(PRIVACY_NOTICE_URL?.trim() || IMPRINT_URL?.trim()) && (
+        <footer className="bg-base-100/50 border-t border-base-300">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+                {PRIVACY_NOTICE_URL && PRIVACY_NOTICE_URL.trim() && (
                   <a
                     href={PRIVACY_NOTICE_URL}
                     className="text-base-content/70 hover:text-primary transition-colors duration-200 underline decoration-dotted underline-offset-4 hover:decoration-solid"
@@ -192,11 +193,11 @@ export default function App() {
                   >
                     {t('footer.privacyNotice')}
                   </a>
+                )}
+                {PRIVACY_NOTICE_URL?.trim() && IMPRINT_URL?.trim() && (
                   <span className="text-base-content/40">•</span>
-                </>
-              )}
-              {IMPRINT_URL && IMPRINT_URL.trim() && (
-                <>
+                )}
+                {IMPRINT_URL && IMPRINT_URL.trim() && (
                   <a
                     href={IMPRINT_URL}
                     className="text-base-content/70 hover:text-primary transition-colors duration-200 underline decoration-dotted underline-offset-4 hover:decoration-solid"
@@ -205,24 +206,12 @@ export default function App() {
                   >
                     {t('footer.imprint')}
                   </a>
-                  <span className="text-base-content/40">•</span>
-                </>
-              )}
-              <span className="text-base-content/70">
-                &copy; 2014&ndash;{new Date().getFullYear()}{' '}
-                <a
-                  href="https://yopass.se"
-                  className="text-primary hover:text-primary-focus font-medium transition-colors duration-200 underline decoration-dotted underline-offset-4 hover:decoration-solid"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Yopass
-                </a>
-              </span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 }
