@@ -92,12 +92,10 @@ it.each([undefined, 'Acme Secrets'])(
   },
 );
 
-it('keeps the default wordmark when no branding options are set', async () => {
-  localStorage.setItem('themeMode', 'light');
+it('shows the dhtech brand when no branding options are set', async () => {
   const brand = await render();
-  expect(brand.querySelector('img')!.getAttribute('src')).toBe(
-    '/yopass-full.svg',
-  );
+  expect(brand.querySelector('img')!.getAttribute('src')).toBe('/favicon.svg');
+  expect(brand.textContent).toBe('DreamHack OTP');
 });
 
 it('keeps existing requests accessible while an expired license drains', async () => {

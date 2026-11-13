@@ -1,0 +1,50 @@
+/*
+ * The look of this fork (github.com/dhtech/yopass, branch dhtech):
+ * DreamHack's tech crew's orange on near-black, as on our other pages.
+ *
+ * The two DEFAULT themes are repainted - "emerald" (light) and "dim"
+ * (dark), the themes every unlicensed server answers with. Their names
+ * stay, so nothing else in the code, the servers or the tests knows
+ * about this file: everything of the fork's look is here, in the icons
+ * under public/ and in the default brand of the Navbar.
+ *
+ * `:root[data-theme=...]` is more specific than DaisyUI's own
+ * `[data-theme=...]` rule, so these win whatever the order of the
+ * stylesheets. Only colours are set; sizes, radii and the status
+ * colours are the base themes'.
+ */
+
+/* light */
+:root[data-theme='emerald'] {
+  color-scheme: light;
+  --color-base-100: #ffffff;
+  --color-base-200: #f4f3f1;
+  --color-base-300: #dedcd7;
+  --color-base-content: #1b1b1f;
+  /* a deeper orange: it is also the colour of links on white (5.2:1) */
+  --color-primary: #c2410c;
+  --color-primary-content: #ffffff;
+  --color-secondary: #ff6600;
+  --color-secondary-content: #141414;
+  --color-accent: #ff8533;
+  --color-accent-content: #141414;
+  --color-neutral: #26262b;
+  --color-neutral-content: #f3f4f6;
+}
+
+/* dark */
+:root[data-theme='dim'] {
+  color-scheme: dark;
+  --color-base-100: #1b1b1f;
+  --color-base-200: #141416;
+  --color-base-300: #2c2c31;
+  --color-base-content: #e6e7ea;
+  --color-primary: #ff6600;
+  --color-primary-content: #141414;
+  --color-secondary: #ff8533;
+  --color-secondary-content: #141414;
+  --color-accent: #ffa366;
+  --color-accent-content: #141414;
+  --color-neutral: #26262b;
+  --color-neutral-content: #f3f4f6;
+}

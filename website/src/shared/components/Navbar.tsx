@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useTheme } from '../theme/ThemeProvider';
 import { useConfig } from '../hooks/useConfig';
 import { useAuth } from '../hooks/useAuth';
 import SettingsMenu from './SettingsMenu';
@@ -9,6 +8,9 @@ import { useResponderPage } from '../hooks/useResponderPage';
 import { backendDomain } from '../lib/api';
 import { countFulfilledRequests } from '../lib/requestStatus';
 import { REQUESTS_CHANGED_EVENT } from '../lib/requestStore';
+
+// dhtech: the name beside the mark, and the page's title (index.html)
+const DHTECH_APP_NAME = 'DreamHack OTP';
 
 export default function Navbar() {
   const {
@@ -22,7 +24,6 @@ export default function Navbar() {
     SECRET_REQUESTS_DRAINING,
     READ_RECEIPTS,
   } = useConfig();
-  const { mode } = useTheme();
   const customBranding = Boolean(LOGO_URL || APP_NAME || HIDE_APP_NAME);
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
@@ -74,13 +75,17 @@ export default function Navbar() {
           )}
         </>
       ) : (
-        <img
-          src={mode === 'dark' ? '/yopass-full-dark.svg' : '/yopass-full.svg'}
-          alt="Yopass"
-          width={138}
-          height={28}
-          className="h-6 w-auto sm:h-7 shrink-0"
-        />
+        // dhtech: this fork's own brand in the place of upstream's wordmark
+        <>
+          <img
+            src="/favicon.svg"
+            alt=""
+            width={28}
+            height={28}
+            className="h-7 w-7 shrink-0 mr-2 sm:mr-3"
+          />
+          <span className="truncate">{DHTECH_APP_NAME}</span>
+        </>
       )}
     </a>
   );

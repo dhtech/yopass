@@ -1,0 +1,81 @@
+name: dhtech release
+
+# The releases of this fork (branch dhtech). Pushing a tag vX.Y.Z-dhN
+# tests the tree, builds the container image and publishes it as a FILE
+# on a GitHub release:
+#
+#   yopass_<version>_linux_amd64.tar.gz   an image archive, for
+#                                         `podman load` / `docker load`;
+#                                         the image in it is named
+#                                         localhost/yopass:<version>
+#   SHA256SUMS
+#
+# Nothing is pushed to a registry: the servers that run it get the file
+# from a mirror and have no need of the internet.
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    tags: ["v*-dh*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Test, build and publish the image archive
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'dhtech'
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+      memcached:
+        image: memcached
+        ports:
+          - 11211:11211
+    env:
+      MEMCACHED: localhost:11211
+      REDIS_URL: "redis://localhost:6379/0"
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+
+      # upstream's own server tests (the fork changes nothing in the
+      # server; this says the tree it was cut from is whole)
+      - name: Server tests
+        run: |
+          for i in {1..5}; do if ! echo stats | nc -w 1 localhost 11211 >/dev/null; then echo 'Waiting for memcached' && sleep 1; fi; done
+          go test ./cmd/... ./pkg/...
+
+      # the web page: built once here (typecheck included), tested in
+      # the same stage without a network, then reused by the image build
+      - name: Web page - build
+        run: docker build --target website -t yopass-website .
+
+      - name: Web page - unit tests
+        run: >
+          docker run --rm --network none -w /website yopass-website
+          yarn test:unit
+
+      - name: Image archive
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          docker build --build-arg "VERSION=${version}" -t "localhost/yopass:${version}" .
+          mkdir dist
+          docker save "localhost/yopass:${version}" | gzip -9 > "dist/yopass_${version}_linux_amd64.tar.gz"
+          (cd dist && sha256sum *.tar.gz > SHA256SUMS && cat SHA256SUMS && ls -l)
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "${GITHUB_REF_NAME}" dist/*
+          --title "${GITHUB_REF_NAME}"
+          --notes "Yopass ${GITHUB_REF_NAME%-dh*} with the dhtech look
+          (see DHTECH.md). The image is in the archive:
+          podman load -i yopass_${GITHUB_REF_NAME#v}_linux_amd64.tar.gz"
